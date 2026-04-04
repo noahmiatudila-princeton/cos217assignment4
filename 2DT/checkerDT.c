@@ -80,6 +80,17 @@ static boolean CheckerDT_treeCheck(Node_T oNNode, size_t *pulNodeCount) {
              return FALSE;
          }
 
+         /* Check Proper Children Ordering */
+         if (ulIndex > 0) {
+             Node_T oNPreviousChild = NULL;
+             Node_getChild(oNNode, ulIndex - 1, &oNPreviousChild);
+             
+            if (Node_compare(oNPreviousChild, oNChild) >= 0) {
+               fprintf(stderr, "Children array not strictly sorted in proper compare order\n");
+               return FALSE;
+            }
+         }
+
          /* if recurring down one subtree results in a failed check
             farther down, passes the failure back up immediately */
          if(!CheckerDT_treeCheck(oNChild, pulNodeCount))
