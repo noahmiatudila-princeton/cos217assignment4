@@ -61,14 +61,10 @@ boolean CheckerDT_Node_isValid(Node_T oNNode) {
    return TRUE;
 }
 
-/*
-   Performs a pre-order traversal of the tree rooted at oNNode.
-   Returns FALSE if a broken invariant is found and
-   returns TRUE otherwise.
-
-   You may want to change this function's return type or
-   parameter list to facilitate constructing your checks.
-   If you do, you should update this function comment.
+/* Performs a pre-order traversal of the tree rooted at oNNode, and
+updates the total number of nodes traversed in location pointed to by
+pulNodeCount. Returns FALSE if a broken invariant is found and returns 
+TRUE otherwise.
 */
 static boolean CheckerDT_treeCheck(Node_T oNNode, size_t *pulNodeCount) {
    size_t ulIndex;
