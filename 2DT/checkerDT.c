@@ -23,24 +23,38 @@ boolean CheckerDT_Node_isValid(Node_T oNNode) {
       fprintf(stderr, "A node is a NULL pointer\n");
       return FALSE;
    }
+   
+   /* Check if Path is NULL */
+   oPNPath = Node_getPath(oNNode);
+   if(oPNPath == NULL) {
+       fprintf(stderr, "A node's path is NULL\n");
+       return FALSE;
+   }
 
    oNParent = Node_getParent(oNNode);
    if(oNParent != NULL) {
-      oPNPath = Node_getPath(oNNode);
       oPPPath = Node_getPath(oNParent);
 
-      /* Check if parent depth is one less than child depth*/
+      /* Check if parent depth is one less than child depth */
       if(Path_getDepth(oPPPath) != Path_getDepth(oPNPath) - 1) {
          fprintf(stderr, "Parent depth is not one less than child depth: (%s) (%s)\n", 
                Path_getPathname(oPPPath), Path_getPathname(oPNPath));
          return FALSE;
       }
 
+      /* Check if parent path is the exact prefix of the child path */
       if(Path_getSharedPrefixDepth(oPNPath, oPPPath) !=
          Path_getDepth(oPNPath) - 1) {
          fprintf(stderr, "P-C nodes don't have P-C paths: (%s) (%s)\n",
                  Path_getPathname(oPPPath), Path_getPathname(oPNPath));
          return FALSE;
+      }
+   } else {
+      /* If there is no parent this must be a root node */
+      if(Path_getDepth(oPNPath) != 1) {
+          fprintf(stderr, "Node has no parent, but its path depth is not 1: (%s)\n", 
+                  Path_getPathname(oPNPath));
+          return FALSE;
       }
    }
 
@@ -60,10 +74,10 @@ static boolean CheckerDT_treeCheck(Node_T oNNode, size_t *pulNodeCount) {
    size_t ulIndex;
 
    if(oNNode!= NULL) {
-      /* Count This Node */
+      /* Count this node */
       (*pulNodeCount)++;
 
-      /* Check if Node is Valid */
+      /* Check if node is valid */
       if(!CheckerDT_Node_isValid(oNNode))
          return FALSE;
 
@@ -73,28 +87,27 @@ static boolean CheckerDT_treeCheck(Node_T oNNode, size_t *pulNodeCount) {
          Node_T oNChild = NULL;
          int iStatus = Node_getChild(oNNode, ulIndex, &oNChild);
          
-         /* Check if Number of Children is Correct */
+         /* Check number of children */
          if(iStatus != SUCCESS) {
             fprintf(stderr, "getNumChildren claims more children than getChild returns\n");
             return FALSE;
          }
 
-         /* Check if Correct Parent Pointer */
+         /* Check if correct parent pointer */
          if (oNNode != Node_getParent(oNChild)) {
              fprintf(stderr, "Child's parent pointer does not match actual parent\n");
              return FALSE;
          }
 
-         /* Check Proper Children Ordering (not sure if necessary) */
+         /* Check proper children ordering */
          if (ulIndex > 0) {
-             Node_T oNPreviousChild = NULL;
-             Node_getChild(oNNode, ulIndex - 1, &oNPreviousChild);
+            Node_T oNPreviousChild = NULL;
+            Node_getChild(oNNode, ulIndex - 1, &oNPreviousChild);
              
-             /* TRUST NOBODY: Bypass the potentially buggy Node_compare */
-             if (Path_comparePath(Node_getPath(oNPreviousChild), Node_getPath(oNChild)) >= 0) {
-                 fprintf(stderr, "Children array not strictly sorted in proper compare order\n");
-                 return FALSE;
-             }
+            if (Path_comparePath(Node_getPath(oNPreviousChild), Node_getPath(oNChild)) >= 0) {
+               fprintf(stderr, "Children array not in proper compare order\n");
+               return FALSE;
+            }
          }
 
          /* if recurring down one subtree results in a failed check

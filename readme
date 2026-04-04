@@ -160,6 +160,19 @@ the error manifests itself or is "noticed" by the client.
 What are your critiques of the given DT implementations, as
 specified in Step 2.5?
 
-
+1. In dtGood.c, DT_toString fails to check the return
+value of DynArray_new for NULL, which fails our memory allocation best
+practices.
+2. In nodeDTGood.c, the function Node_toString is fully implemented,
+however it is never used. When dtGood.c builds the string representation
+of the tree in DT_toString, it ignores Node_toString and instead uses
+its own custom mapping functions whi rely on Node_getPath and
+Path_getPathname.
+3. In nodeDTGood.c, Node_hasChild requiires a Path_T only to remove its
+string and cast away the const qualifier, which goes against
+abstraction principles.
+4. dtGood.c follows non-standard parameter ordering in helper functions
+such as DT_preOrderTraversal which does not place the destination
+parameter first.
 
 ------------------------------------------------------------------------
