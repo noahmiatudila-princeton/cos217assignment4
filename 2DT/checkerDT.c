@@ -90,10 +90,11 @@ static boolean CheckerDT_treeCheck(Node_T oNNode, size_t *pulNodeCount) {
              Node_T oNPreviousChild = NULL;
              Node_getChild(oNNode, ulIndex - 1, &oNPreviousChild);
              
-            if (Node_compare(oNPreviousChild, oNChild) >= 0) {
-               fprintf(stderr, "Children array not strictly sorted in proper compare order\n");
-               return FALSE;
-            }
+             /* TRUST NOBODY: Bypass the potentially buggy Node_compare */
+             if (Path_comparePath(Node_getPath(oNPreviousChild), Node_getPath(oNChild)) >= 0) {
+                 fprintf(stderr, "Children array not strictly sorted in proper compare order\n");
+                 return FALSE;
+             }
          }
 
          /* if recurring down one subtree results in a failed check
