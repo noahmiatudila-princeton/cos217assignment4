@@ -24,6 +24,13 @@ boolean CheckerDT_Node_isValid(Node_T oNNode) {
       return FALSE;
    }
 
+   /* Check if parent depth is one less than child depth*/
+   if(Path_getDepth(oPPPath) != Path_getDepth(oPNPath) - 1) {
+      fprintf(stderr, "Parent depth is not one less than child depth: (%s) (%s)\n", 
+            Path_getPathname(oPPPath), Path_getPathname(oPNPath));
+      return FALSE;
+   }
+
    /* Sample check: parent's path must be the longest possible
       proper prefix of the node's path */
    oNParent = Node_getParent(oNNode);
@@ -80,7 +87,7 @@ static boolean CheckerDT_treeCheck(Node_T oNNode, size_t *pulNodeCount) {
              return FALSE;
          }
 
-         /* Check Proper Children Ordering */
+         /* Check Proper Children Ordering (not sure if necessary) */
          if (ulIndex > 0) {
              Node_T oNPreviousChild = NULL;
              Node_getChild(oNNode, ulIndex - 1, &oNPreviousChild);
