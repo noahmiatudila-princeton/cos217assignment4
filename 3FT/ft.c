@@ -339,7 +339,6 @@ int FT_insertFile(const char *pcPath, void *pvContents,
                   size_t ulLength) {
     
     assert(pcPath != NULL);
-    assert(pvContents != NULL);
 
     return FT_insertNode(pcPath, TRUE, pvContents, ulLength);
 }
