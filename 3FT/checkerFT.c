@@ -1,19 +1,18 @@
 /*--------------------------------------------------------------------*/
-/* checkerDT.c                                                        */
+/* checkerFT.c                                                        */
 /* Author: Noah Miatudila                                             */
 /*--------------------------------------------------------------------*/
 
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
-#include "checkerDT.h"
+#include "checkerFT.h"
 #include "dynarray.h"
 #include "path.h"
+#include "nodeFT.h"
 
-
-
-/* see checkerDT.h for specification */
-boolean CheckerDT_Node_isValid(Node_T oNNode) {
+/* see checkerFT.h for specification */
+boolean CheckerFT_Node_isValid(Node_T oNNode) {
    Node_T oNParent;
    Path_T oPNPath;
    Path_T oPPPath;
@@ -22,6 +21,16 @@ boolean CheckerDT_Node_isValid(Node_T oNNode) {
    if(oNNode == NULL) {
       fprintf(stderr, "A node is a NULL pointer\n");
       return FALSE;
+   }
+
+   /* Directories cannot have file contents */
+   if (!Node_isFile(oNNode)) {
+       if (Node_getFileContents(oNNode) != NULL || 
+        Node_getFileLength(oNNode) != 0) {
+           fprintf(stderr, 
+            "Directory node contains file data or non-zero length\n");
+           return FALSE;
+       }
    }
    
    /* Check if Path is NULL */
@@ -68,62 +77,70 @@ updates the total number of nodes traversed in location pointed to by
 pulNodeCount. Returns FALSE if a broken invariant is found and returns 
 TRUE otherwise.
 */
-static boolean CheckerDT_treeCheck(Node_T oNNode, 
-   size_t *pulNodeCount) {
-   size_t ulIndex;
+static boolean CheckerFT_treeCheck(Node_T oNNode, 
+    size_t *pulNodeCount) {
+    size_t ulIndex;
 
-   if(oNNode!= NULL) {
-      /* Count this node */
-      (*pulNodeCount)++;
+    if(oNNode!= NULL) {
+        /* Count this node */
+        (*pulNodeCount)++;
 
-      /* Check if node is valid */
-      if(!CheckerDT_Node_isValid(oNNode))
-         return FALSE;
-
-      /* Recur on every child of oNNode */
-      for(ulIndex = 0; ulIndex < Node_getNumChildren(oNNode); ulIndex++)
-      {
-         Node_T oNChild = NULL;
-         int iStatus = Node_getChild(oNNode, ulIndex, &oNChild);
-         
-         /* Check number of children */
-         if(iStatus != SUCCESS) {
-            fprintf(stderr, 
-               "getNumChildren claims more children than getChild\n");
+        /* Check if node is valid */
+        if(!CheckerFT_Node_isValid(oNNode)) return FALSE;
+        
+        /* Check if a file is a leaf of the tree */
+        if (Node_isFile(oNNode) && Node_getNumChildren(oNNode) > 0) {
+            fprintf(stderr, "A file node has children\n");
             return FALSE;
-         }
+        }
 
-         /* Check if correct parent pointer */
-         if (oNNode != Node_getParent(oNChild)) {
-             fprintf(stderr, 
-               "Child's parent pointer does not match actual parent\n");
-             return FALSE;
-         }
+        /* Recur on every child of oNNode */
+        for(ulIndex = 0; 
+            ulIndex < Node_getNumChildren(oNNode); 
+            ulIndex++)
+        {
+            Node_T oNChild = NULL;
+            int iStatus = Node_getChild(oNNode, ulIndex, &oNChild);
+            
+            /* Check number of children */
+            if(iStatus != SUCCESS) {
+            fprintf(stderr, 
+                "getNumChildren claims more children than getChild\n");
+            return FALSE;
+            }
 
-         /* Check proper children ordering */
-         if (ulIndex > 0) {
+            /* Check if correct parent pointer */
+            if (oNNode != Node_getParent(oNChild)) {
+                fprintf(stderr, 
+                "Child's parent pointer does not match actual parent\n");
+                return FALSE;
+            }
+
+            /* Check proper children ordering */
+            if (ulIndex > 0) {
             Node_T oNPreviousChild = NULL;
             Node_getChild(oNNode, ulIndex - 1, &oNPreviousChild);
-             
+                
             if (Path_comparePath(Node_getPath(oNPreviousChild), 
-            Node_getPath(oNChild)) >= 0) {
-               fprintf(stderr, 
-                  "Children array not in proper compare order\n");
-               return FALSE;
+                Node_getPath(oNChild)) >= 0) {
+                    fprintf(stderr, 
+                        "Children array not in proper compare order\n");
+                    return FALSE;
+                }
             }
-         }
 
-         /* if recurring down one subtree results in a failed check
+            /* if recurring down one subtree results in a failed check
             farther down, passes the failure back up immediately */
-         if(!CheckerDT_treeCheck(oNChild, pulNodeCount))
-            return FALSE;
-      }
-   }
-   return TRUE;
+            if(!CheckerFT_treeCheck(oNChild, pulNodeCount)) {
+                return FALSE;
+            }
+        }
+    }
+    return TRUE;
 }
 
-/* see checkerDT.h for specification */
-boolean CheckerDT_isValid(boolean bIsInitialized, Node_T oNRoot,
+/* see checkerFT.h for specification */
+boolean CheckerFT_isValid(boolean bIsInitialized, Node_T oNRoot,
                           size_t ulCount) {
    size_t ulCurrentNodeCount = 0;
   
@@ -161,10 +178,15 @@ boolean CheckerDT_isValid(boolean bIsInitialized, Node_T oNRoot,
          fprintf(stderr, "Parent of root node not NULL\n");
          return FALSE;
       }
+
+      if (Node_isFile(oNRoot)) {
+         fprintf(stderr, "The root node is a file\n");
+         return FALSE;
+      }
    }
 
    /* Recursively Traverse the Tree */
-   if (!CheckerDT_treeCheck(oNRoot, &ulCurrentNodeCount)) {
+   if (!CheckerFT_treeCheck(oNRoot, &ulCurrentNodeCount)) {
       return FALSE; 
    }
 

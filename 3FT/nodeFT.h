@@ -76,13 +76,24 @@ Node_T Node_getParent(Node_T oNNode);
 */
 int Node_compare(Node_T oNFirst, Node_T oNSecond);
 
-/*
-  Returns a string representation for oNNode, or NULL if
-  there is an allocation error.
-
-  Allocates memory for the returned string, which is then owned by
-  the caller!
+/* Returns TRUE if oNNode represents a file, 
+FALSE if it is a directory. 
 */
-char *Node_toString(Node_T oNNode);
+boolean Node_isFile(Node_T oNNode);
+
+/* Returns the file contents of oNNode. 
+(Returns NULL if it is a directory or empty). */
+void *Node_getFileContents(Node_T oNNode);
+
+/* Returns the length of the file contents of oNNode. 
+(Returns 0 if it is a directory). */
+size_t Node_getFileLength(Node_T oNNode);
+
+/* Replaces the contents and length of oNNode with pvNewContents and 
+ulNewLength. Returns the old contents pointer so the client can free 
+it if necessary.
+*/
+void *Node_replaceFileContents(Node_T oNNode, void *pvNewContents, 
+    size_t ulNewLength);
 
 #endif
