@@ -11,60 +11,71 @@
 #include "path.h"
 
 /* see checkerFT.h for specification */
-boolean CheckerFT_Node_isValid(Node_T oNNode) {
+boolean CheckerFT_Node_isValid(Node_T oNNode)
+{
    Node_T oNParent;
    Path_T oPNPath;
    Path_T oPPPath;
 
    /* Sample check: a NULL pointer is not a valid node */
-   if(oNNode == NULL) {
+   if (oNNode == NULL)
+   {
       fprintf(stderr, "A node is a NULL pointer\n");
       return FALSE;
    }
 
    /* Directories cannot have file contents */
-   if (!Node_isFile(oNNode)) {
-       if (Node_getFileContents(oNNode) != NULL || 
-        Node_getFileLength(oNNode) != 0) {
-           fprintf(stderr, 
-            "Directory node contains file data or non-zero length\n");
-           return FALSE;
-       }
+   if (!Node_isFile(oNNode))
+   {
+      if (Node_getFileContents(oNNode) != NULL ||
+          Node_getFileLength(oNNode) != 0)
+      {
+         fprintf(stderr,
+                 "Directory node has file data or non-zero length\n");
+         return FALSE;
+      }
    }
-   
+
    /* Check if Path is NULL */
    oPNPath = Node_getPath(oNNode);
-   if(oPNPath == NULL) {
-       fprintf(stderr, "A node's path is NULL\n");
-       return FALSE;
+   if (oPNPath == NULL)
+   {
+      fprintf(stderr, "A node's path is NULL\n");
+      return FALSE;
    }
 
    oNParent = Node_getParent(oNNode);
-   if(oNParent != NULL) {
+   if (oNParent != NULL)
+   {
       oPPPath = Node_getPath(oNParent);
 
       /* Check if parent depth is one less than child depth */
-      if(Path_getDepth(oPPPath) != Path_getDepth(oPNPath) - 1) {
-         fprintf(stderr, 
-            "Parent depth not one less than child depth: (%s) (%s)\n",
-            Path_getPathname(oPPPath), Path_getPathname(oPNPath));
+      if (Path_getDepth(oPPPath) != Path_getDepth(oPNPath) - 1)
+      {
+         fprintf(stderr,
+                 "Parent depth not one less than child's: (%s) (%s)\n",
+                 Path_getPathname(oPPPath), Path_getPathname(oPNPath));
          return FALSE;
       }
 
       /* Check if parent path is the exact prefix of the child path */
-      if(Path_getSharedPrefixDepth(oPNPath, oPPPath) !=
-         Path_getDepth(oPNPath) - 1) {
+      if (Path_getSharedPrefixDepth(oPNPath, oPPPath) !=
+          Path_getDepth(oPNPath) - 1)
+      {
          fprintf(stderr, "P-C nodes don't have P-C paths: (%s) (%s)\n",
                  Path_getPathname(oPPPath), Path_getPathname(oPNPath));
          return FALSE;
       }
-   } else {
+   }
+   else
+   {
       /* If there is no parent this must be a root node */
-      if(Path_getDepth(oPNPath) != 1) {
-          fprintf(stderr, 
-            "Node has no parent, but its path depth is not 1: (%s)\n",
-            Path_getPathname(oPNPath));
-          return FALSE;
+      if (Path_getDepth(oPNPath) != 1)
+      {
+         fprintf(stderr,
+                 "Node has no parent, but path depth not 1: (%s)\n",
+                 Path_getPathname(oPNPath));
+         return FALSE;
       }
    }
 
@@ -73,88 +84,101 @@ boolean CheckerFT_Node_isValid(Node_T oNNode) {
 
 /* Performs a pre-order traversal of the tree rooted at oNNode, and
 updates the total number of nodes traversed in location pointed to by
-pulNodeCount. Returns FALSE if a broken invariant is found and returns 
+pulNodeCount. Returns FALSE if a broken invariant is found and returns
 TRUE otherwise.
 */
-static boolean CheckerFT_treeCheck(Node_T oNNode, 
-    size_t *pulNodeCount) {
-    size_t ulIndex;
+static boolean CheckerFT_treeCheck(Node_T oNNode,
+                                   size_t *pulNodeCount)
+{
+   size_t ulIndex;
 
-    assert(pulNodeCount != NULL);
+   assert(pulNodeCount != NULL);
 
-    if(oNNode!= NULL) {
-        /* Count this node */
-        (*pulNodeCount)++;
+   if (oNNode != NULL)
+   {
+      /* Count this node */
+      (*pulNodeCount)++;
 
-        /* Check if node is valid */
-        if(!CheckerFT_Node_isValid(oNNode)) return FALSE;
-        
-        /* Check if a file is a leaf of the tree */
-        if (Node_isFile(oNNode) && Node_getNumChildren(oNNode) > 0) {
-            fprintf(stderr, "A file node has children\n");
+      /* Check if node is valid */
+      if (!CheckerFT_Node_isValid(oNNode))
+         return FALSE;
+
+      /* Check if a file is a leaf of the tree */
+      if (Node_isFile(oNNode) && Node_getNumChildren(oNNode) > 0)
+      {
+         fprintf(stderr, "A file node has children\n");
+         return FALSE;
+      }
+
+      /* Recur on every child of oNNode */
+      for (ulIndex = 0;
+           ulIndex < Node_getNumChildren(oNNode);
+           ulIndex++)
+      {
+         Node_T oNChild = NULL;
+         int iStatus = Node_getChild(oNNode, ulIndex, &oNChild);
+
+         /* Check number of children */
+         if (iStatus != SUCCESS)
+         {
+            fprintf(stderr,
+               "getNumChildren returns more children than getChild\n");
             return FALSE;
-        }
+         }
 
-        /* Recur on every child of oNNode */
-        for(ulIndex = 0; 
-            ulIndex < Node_getNumChildren(oNNode); 
-            ulIndex++)
-        {
-            Node_T oNChild = NULL;
-            int iStatus = Node_getChild(oNNode, ulIndex, &oNChild);
-            
-            /* Check number of children */
-            if(iStatus != SUCCESS) {
-            fprintf(stderr, 
-                "getNumChildren claims more children than getChild\n");
+         /* Check if correct parent pointer */
+         if (oNNode != Node_getParent(oNChild))
+         {
+            fprintf(stderr,
+               "Child's parent pointer does not match actual parent\n");
             return FALSE;
-            }
+         }
 
-            /* Check if correct parent pointer */
-            if (oNNode != Node_getParent(oNChild)) {
-                fprintf(stderr, 
-                "Child's parent pointer does not match actual parent\n");
-                return FALSE;
-            }
-
-            /* Check proper children ordering */
-            if (ulIndex > 0) {
+         /* Check proper children ordering */
+         if (ulIndex > 0)
+         {
             Node_T oNPreviousChild = NULL;
             Node_getChild(oNNode, ulIndex - 1, &oNPreviousChild);
-                
-            if (Path_comparePath(Node_getPath(oNPreviousChild), 
-                Node_getPath(oNChild)) >= 0) {
-                    fprintf(stderr, 
-                        "Children array not in proper compare order\n");
-                    return FALSE;
-                }
-            }
 
-            /* if recurring down one subtree results in a failed check
-            farther down, passes the failure back up immediately */
-            if(!CheckerFT_treeCheck(oNChild, pulNodeCount)) {
-                return FALSE;
+            if (Path_comparePath(Node_getPath(oNPreviousChild),
+                                 Node_getPath(oNChild)) >= 0)
+            {
+               fprintf(stderr,
+                       "Children array not in proper compare order\n");
+               return FALSE;
             }
-        }
-    }
-    return TRUE;
+         }
+
+         /* if recurring down one subtree results in a failed check
+         farther down, passes the failure back up immediately */
+         if (!CheckerFT_treeCheck(oNChild, pulNodeCount))
+         {
+            return FALSE;
+         }
+      }
+   }
+   return TRUE;
 }
 
 /* see checkerFT.h for specification */
 boolean CheckerFT_isValid(boolean bIsInitialized, Node_T oNRoot,
-                          size_t ulCount) {
+                          size_t ulCount)
+{
    size_t ulCurrentNodeCount = 0;
-  
+
    /* Initialization State Check */
-   if(!bIsInitialized) {
+   if (!bIsInitialized)
+   {
       /* Non-initialized tree must have count 0 */
-      if(ulCount != 0) {
+      if (ulCount != 0)
+      {
          fprintf(stderr, "Not initialized, but count is not 0\n");
          return FALSE;
       }
 
       /* Non-initialized tree must have NULL root */
-      if (oNRoot != NULL) {
+      if (oNRoot != NULL)
+      {
          fprintf(stderr, "Not initialized, but root is not NULL\n");
          return FALSE;
       }
@@ -163,42 +187,49 @@ boolean CheckerFT_isValid(boolean bIsInitialized, Node_T oNRoot,
    }
 
    /* Empty Tree Check */
-   if (ulCount == 0 && oNRoot != NULL) {
+   if (ulCount == 0 && oNRoot != NULL)
+   {
       fprintf(stderr, "Count is zero, but root is not NULL\n");
       return FALSE;
    }
 
    /* Non-Empty Tree Check */
-   if (ulCount != 0) {
+   if (ulCount != 0)
+   {
       /* root of non-empty tree cannot be NULL */
-      if (oNRoot == NULL) {
+      if (oNRoot == NULL)
+      {
          fprintf(stderr, "Count is non-zero, but root is NULL\n");
          return FALSE;
       }
 
       /* root of non-empty tree must be NULL */
-      if (Node_getParent(oNRoot) != NULL) {
+      if (Node_getParent(oNRoot) != NULL)
+      {
          fprintf(stderr, "Parent of root node not NULL\n");
          return FALSE;
       }
 
       /* root of non-empty tree cannot be a file */
-      if (Node_isFile(oNRoot)) {
+      if (Node_isFile(oNRoot))
+      {
          fprintf(stderr, "The root node is a file\n");
          return FALSE;
       }
    }
 
    /* Recursively Traverse the Tree */
-   if (!CheckerFT_treeCheck(oNRoot, &ulCurrentNodeCount)) {
-      return FALSE; 
+   if (!CheckerFT_treeCheck(oNRoot, &ulCurrentNodeCount))
+   {
+      return FALSE;
    }
 
    /* Check Correct Node Count*/
-   if (ulCurrentNodeCount != ulCount) {
-      fprintf(stderr, 
-         "Real node count (%lu) does not match ulCount (%lu)\n", 
-         ulCurrentNodeCount, ulCount);
+   if (ulCurrentNodeCount != ulCount)
+   {
+      fprintf(stderr,
+              "Real node count (%lu) does not match ulCount (%lu)\n",
+              ulCurrentNodeCount, ulCount);
       return FALSE;
    }
 

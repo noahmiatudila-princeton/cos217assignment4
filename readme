@@ -8,7 +8,7 @@ Noah Julien V. Miatudila
 ------------------------------------------------------------------------
 Student 2: What is your name?
 
-
+N/A
 
 ------------------------------------------------------------------------
 Student 1: What authorized sources of information did you use to
@@ -17,7 +17,12 @@ information given in the "Policies" web page (also available on armlab
 in the file ~cos217/AuthorizedSourcesList ) to this section of the
 readme file, and edit it as appropriate.
 
-
+COS 217 lecture materials.
+COS 217 precept materials.
+COS 217 website.
+COS 217 textbooks.
+The man pages on the armlab cluster.
+COS 217 staff and/or current students on Ed.
 
 ------------------------------------------------------------------------
 Student 2: What authorized sources of information did you use to
@@ -26,7 +31,7 @@ information given in the "Policies" web page (also available on armlab
 in the file ~cos217/AuthorizedSourcesList ) to this section of the
 readme file, and edit it as appropriate.
 
-
+N/A
 
 ------------------------------------------------------------------------
 Student 1: What unauthorized sources of information did you use to
@@ -40,7 +45,7 @@ nature of the interaction, may additionally require the interaction
 being reported to the Committee on Discipline. Write "None" if you used
 no unauthorized sources of information.
 
-
+None.
 
 ------------------------------------------------------------------------
 Student 2: What unauthorized sources of information did you use to
@@ -54,7 +59,7 @@ nature of the interaction, may additionally require the interaction
 being reported to the Committee on Discipline. Write "None" if you used
 no unauthorized sources of information.
 
-
+N/A
 
 ------------------------------------------------------------------------
 Student 1: In fulfillment of the requirement from section 2.4.3 of the
@@ -64,7 +69,8 @@ guide, enter your name in the space below the following affirmation:
 This paper represents my own work in accordance with University
 regulations.
 
-
+This paper represents my own work in accordance with University
+regulations.
 
 ------------------------------------------------------------------------
 Student 2: In fulfillment of the requirement from section 2.4.3 of the
@@ -74,7 +80,7 @@ guide, enter your name in the space below the following affirmation:
 This paper represents my own work in accordance with University
 regulations.
 
-
+N/A
 
 ------------------------------------------------------------------------
 In fulfillment of the requirement from section 2.4.6 of the Academic
@@ -82,26 +88,30 @@ Regulations in Princeton's Rights, Rules, Responsibilities guide,
 and the COS 217 Generative AI policy, disclose and describe how you
 used AI in completing this assignment:
 
-
+None.
 
 ------------------------------------------------------------------------
 Student 1: What is your assessment of the assignment? Was it helpful?
 Was it fun?
 
-
+This assignment was lengthy but digestable when approched in small
+chunks. I found it rewarding to find bugs in the different
+implementaions of the trees and it was also my first time writing a
+checker client. I will attempt to use similar approaches to debugging
+in future coding projects.
 
 ------------------------------------------------------------------------
 Student 2: What is your assessment of the assignment? Was it helpful?
 Was it fun?
 
-
+N/A
 
 ------------------------------------------------------------------------
 (optional) What information can you provide about your submission that
 will help your grader to grade it in the most favorable light? In
 particular, what bugs are in your submission?
 
-
+N/A
 
 ------------------------------------------------------------------------
 What warnings does splint generate for Part 2's checker, and what are
@@ -109,7 +119,7 @@ your disagreements with them? Copy the splint warnings here, and
 express your disagreement after each warning. If there are no
 warnings, then write "None."
 
-
+None.
 
 ------------------------------------------------------------------------
 What warnings does critTer generate on checkerDT.c, and what are your
@@ -117,7 +127,15 @@ disagreements with them? Copy the critTer warnings here, and express
 your disagreement after each warning. If there are no warnings, then
 write "None."
 
+Checking checkerDT.c
 
+   checkerDT.c: line 111: low priority: 
+   This area is deeply nested at level 4, consider refactoring
+
+> I disagree with this warning because, according to the COS217
+> Assignment 4 description, "You do not have to address warnings about 
+> too many functions, too long loops, functions, or files, or too 
+> deeply nested code."
 
 ------------------------------------------------------------------------
 What warnings does splint generate on your Part 3 code, and what are
@@ -125,7 +143,44 @@ your disagreements with them? Copy the splint warnings here, and
 express your disagreement after each warning. If there are no
 warnings, then write "None."
 
+ft.c: (in function FT_traversePath)
+ft.c:99:42: Variable ulChildID used before definition
+  An rvalue is used that may not be initialized to a value on some 
+  execution path. (Use -usedef to inhibit warning)
 
+> I disagree with the above warning because, according to the COS217
+> Assignment 4 description, "You also do not have to address warnings 
+> that result solely from your repurposing of the DT code we gave you."
+> This function repurposes DT_traversePath from dtGood.c.
+
+nodeFT.c: (in function Node_new)
+nodeFT.c:157:54: Variable ulIndex used before definition
+
+> I disagree with the above warning because, according to the COS217
+> Assignment 4 description, "You also do not have to address warnings 
+> that result solely from your repurposing of the DT code we gave you."
+> This function repurposes Node_new from nodeDTGood.c.
+
+nodeFT.c: (in function Node_free)
+nodeFT.c:212:35: Variable ulIndex used before definition
+
+> I disagree with the above warning because, according to the COS217
+> Assignment 4 description, "You also do not have to address warnings 
+> that result solely from your repurposing of the DT code we gave you."
+> This function repurposes Node_free from nodeDTGood.c.
+
+path.h:94:13: Function exported but not used outside path: 
+  Path_getComponent. A declaration is exported, but not used outside 
+  this module. Declaration can use static qualifier. 
+  (Use -exportlocal to inhibit warning)
+   path.c:316:1: Definition of Path_getComponent
+
+> I disagree with the above warning because, according to the COS217
+> Assignment 4 description, "You also do not have to address warnings 
+> that result solely from your repurposing of the DT code we gave you."
+> The function generating the warning comes from the given path.c.
+
+Finished checking --- 4 code warnings
 
 ------------------------------------------------------------------------
 What warnings does critTer generate on your Part 3 code, and what are
@@ -133,7 +188,76 @@ your disagreements with them? Copy the critTer warnings here, and
 express your disagreement after each warning. If there are no
 warnings, then write "None."
 
+Checking checkerFT.c
 
+   checkerFT.c: line 126: low priority: 
+   This area is deeply nested at level 4, consider refactoring
+
+> I disagree with this warning because, according to the COS217
+> Assignment 4 description, "You do not have to address warnings about 
+> too many functions, too long loops, functions, or files, or too 
+> deeply nested code."
+
+Checking ft.c
+
+   ft.c: line 240: low priority: 
+   A loop should consist of fewer than 35 lines;
+   this loop consists of 44 lines; consider refactoring
+
+> I disagree with this warning because, according to the COS217
+> Assignment 4 description, "You do not have to address warnings about 
+> too many functions, too long loops, functions, or files, or too 
+> deeply nested code."
+
+   ft.c: line 566: low priority: 
+   A file should contain no more than 15 functions;
+   this file contains 18 functions
+
+> I disagree with this warning because, according to the COS217
+> Assignment 4 description, "You do not have to address warnings about 
+> too many functions, too long loops, functions, or files, or too 
+> deeply nested code."
+
+   ft.c: line 185: medium priority:
+   Do you want to validate 'pvContents' through an assert?
+
+> I disagree with this warning because nodes are allowed to have NULL
+> values for the *pvContents variable.
+
+   ft.c: line 339: medium priority:
+   Do you want to validate 'pvContents' through an assert?
+
+> I disagree with this warning because nodes are allowed to have NULL
+> values for the *pvContents variable.
+
+   ft.c: line 395: medium priority:
+   Do you want to validate 'pvNewContents' through an assert?
+
+> I disagree with this warning because nodes are allowed to have NULL
+> values for the *pvContents variable.
+
+   ft.c: line 565: low priority: 
+   A source code file should contain fewer than 500 lines;
+   this file contains 566 lines
+
+> I disagree with this warning because, according to the COS217
+> Assignment 4 description, "You do not have to address warnings about 
+> too many functions, too long loops, functions, or files, or too 
+> deeply nested code."
+
+Checking nodeFT.c
+
+   nodeFT.c: line 74: medium priority:
+   Do you want to validate 'pvContents' through an assert?
+
+> I disagree with this warning because nodes are allowed to have NULL
+> values for the *pvContents variable.
+
+   nodeFT.c: line 290: medium priority:
+   Do you want to validate 'pvNewContents' through an assert?
+
+> I disagree with this warning because nodes are allowed to have NULL
+> values for the *pvContents variable.
 
 ------------------------------------------------------------------------
 For each of the five faulty BDT implementations required by Step
