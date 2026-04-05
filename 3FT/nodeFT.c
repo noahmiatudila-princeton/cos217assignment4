@@ -182,6 +182,18 @@ int Node_new(Path_T oPPath, Node_T oNParent, Node_T *poNResult,
         return SUCCESS;
 }
 
+/*
+  Compares oNFirst and oNSecond lexicographically based on their paths.
+  Returns <0, 0, or >0 if onFirst is "less than", "equal to", or
+  "greater than" oNSecond, respectively.
+*/
+static int Node_compare(Node_T oNFirst, Node_T oNSecond) {
+   assert(oNFirst != NULL);
+   assert(oNSecond != NULL);
+
+   return Path_comparePath(oNFirst->oPPath, oNSecond->oPPath);
+}
+
 size_t Node_free(Node_T oNNode) {
    size_t ulIndex;
    size_t ulCount = 0;
@@ -260,13 +272,6 @@ Node_T Node_getParent(Node_T oNNode) {
    assert(oNNode != NULL);
 
    return oNNode->oNParent;
-}
-
-static int Node_compare(Node_T oNFirst, Node_T oNSecond) {
-   assert(oNFirst != NULL);
-   assert(oNSecond != NULL);
-
-   return Path_comparePath(oNFirst->oPPath, oNSecond->oPPath);
 }
 
 boolean Node_isFile(Node_T oNNode) {

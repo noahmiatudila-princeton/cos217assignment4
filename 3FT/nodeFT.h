@@ -70,12 +70,6 @@ int Node_getChild(Node_T oNParent, size_t ulChildID,
 */
 Node_T Node_getParent(Node_T oNNode);
 
-/*
-  Compares oNFirst and oNSecond lexicographically based on their paths.
-  Returns <0, 0, or >0 if onFirst is "less than", "equal to", or
-  "greater than" oNSecond, respectively.
-*/
-static int Node_compare(Node_T oNFirst, Node_T oNSecond);
 
 /* Returns TRUE if oNNode represents a file, 
 FALSE if it is a directory. 
