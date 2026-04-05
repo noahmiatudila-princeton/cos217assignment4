@@ -129,7 +129,16 @@ write "None."
 
 Checking checkerDT.c
 
-   checkerDT.c: line 111: low priority: 
+   checkerDT.c: line 98: low priority: 
+   A loop should consist of fewer than 35 lines;
+   this loop consists of 38 lines; consider refactoring
+
+> I disagree with this warning because, according to the COS217
+> Assignment 4 description, "You do not have to address warnings about 
+> too many functions, too long loops, functions, or files, or too 
+> deeply nested code."
+
+   checkerDT.c: line 126: low priority: 
    This area is deeply nested at level 4, consider refactoring
 
 > I disagree with this warning because, according to the COS217
@@ -144,7 +153,7 @@ express your disagreement after each warning. If there are no
 warnings, then write "None."
 
 ft.c: (in function FT_traversePath)
-ft.c:99:42: Variable ulChildID used before definition
+ft.c:107:39: Variable ulChildID used before definition
   An rvalue is used that may not be initialized to a value on some 
   execution path. (Use -usedef to inhibit warning)
 
@@ -154,7 +163,7 @@ ft.c:99:42: Variable ulChildID used before definition
 > This function repurposes DT_traversePath from dtGood.c.
 
 nodeFT.c: (in function Node_new)
-nodeFT.c:157:54: Variable ulIndex used before definition
+nodeFT.c:171:50: Variable ulIndex used before definition
 
 > I disagree with the above warning because, according to the COS217
 > Assignment 4 description, "You also do not have to address warnings 
@@ -162,7 +171,7 @@ nodeFT.c:157:54: Variable ulIndex used before definition
 > This function repurposes Node_new from nodeDTGood.c.
 
 nodeFT.c: (in function Node_free)
-nodeFT.c:212:35: Variable ulIndex used before definition
+nodeFT.c:232:37: Variable ulIndex used before definition
 
 > I disagree with the above warning because, according to the COS217
 > Assignment 4 description, "You also do not have to address warnings 
@@ -190,7 +199,16 @@ warnings, then write "None."
 
 Checking checkerFT.c
 
-   checkerFT.c: line 126: low priority: 
+   checkerFT.c: line 117: low priority: 
+   A loop should consist of fewer than 35 lines;
+   this loop consists of 40 lines; consider refactoring
+
+> I disagree with this warning because, according to the COS217
+> Assignment 4 description, "You do not have to address warnings about 
+> too many functions, too long loops, functions, or files, or too 
+> deeply nested code."
+
+   checkerFT.c: line 145: low priority: 
    This area is deeply nested at level 4, consider refactoring
 
 > I disagree with this warning because, according to the COS217
@@ -200,16 +218,16 @@ Checking checkerFT.c
 
 Checking ft.c
 
-   ft.c: line 240: low priority: 
+   ft.c: line 255: low priority: 
    A loop should consist of fewer than 35 lines;
-   this loop consists of 44 lines; consider refactoring
+   this loop consists of 47 lines; consider refactoring
 
 > I disagree with this warning because, according to the COS217
 > Assignment 4 description, "You do not have to address warnings about 
 > too many functions, too long loops, functions, or files, or too 
 > deeply nested code."
 
-   ft.c: line 566: low priority: 
+   ft.c: line 615: low priority: 
    A file should contain no more than 15 functions;
    this file contains 18 functions
 
@@ -218,25 +236,25 @@ Checking ft.c
 > too many functions, too long loops, functions, or files, or too 
 > deeply nested code."
 
-   ft.c: line 185: medium priority:
+   ft.c: line 195: medium priority:
    Do you want to validate 'pvContents' through an assert?
 
 > I disagree with this warning because nodes are allowed to have NULL
 > values for the *pvContents variable.
 
-   ft.c: line 339: medium priority:
+   ft.c: line 360: medium priority:
    Do you want to validate 'pvContents' through an assert?
 
 > I disagree with this warning because nodes are allowed to have NULL
 > values for the *pvContents variable.
 
-   ft.c: line 395: medium priority:
+   ft.c: line 421: medium priority:
    Do you want to validate 'pvNewContents' through an assert?
 
 > I disagree with this warning because nodes are allowed to have NULL
 > values for the *pvContents variable.
 
-   ft.c: line 565: low priority: 
+   ft.c: line 614: low priority: 
    A source code file should contain fewer than 500 lines;
    this file contains 566 lines
 
@@ -247,13 +265,13 @@ Checking ft.c
 
 Checking nodeFT.c
 
-   nodeFT.c: line 74: medium priority:
+   nodeFT.c: line 78: medium priority:
    Do you want to validate 'pvContents' through an assert?
 
 > I disagree with this warning because nodes are allowed to have NULL
 > values for the *pvContents variable.
 
-   nodeFT.c: line 290: medium priority:
+   nodeFT.c: line 324: medium priority:
    Do you want to validate 'pvNewContents' through an assert?
 
 > I disagree with this warning because nodes are allowed to have NULL
