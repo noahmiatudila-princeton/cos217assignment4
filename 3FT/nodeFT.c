@@ -163,6 +163,7 @@ int Node_new(Path_T oPPath, Node_T oNParent, Node_T *poNResult,
             }
         }
 
+        /* Set file variables */
         if (bIsFile == TRUE) {
             psNew->bIsFile = TRUE;
             psNew->pvContents = pvContents;

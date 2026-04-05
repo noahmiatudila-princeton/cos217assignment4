@@ -9,7 +9,6 @@
 #include "checkerFT.h"
 #include "dynarray.h"
 #include "path.h"
-#include "nodeFT.h"
 
 /* see checkerFT.h for specification */
 boolean CheckerFT_Node_isValid(Node_T oNNode) {
@@ -81,6 +80,8 @@ static boolean CheckerFT_treeCheck(Node_T oNNode,
     size_t *pulNodeCount) {
     size_t ulIndex;
 
+    assert(pulNodeCount != NULL);
+
     if(oNNode!= NULL) {
         /* Count this node */
         (*pulNodeCount)++;
@@ -146,11 +147,13 @@ boolean CheckerFT_isValid(boolean bIsInitialized, Node_T oNRoot,
   
    /* Initialization State Check */
    if(!bIsInitialized) {
+      /* Non-initialized tree must have count 0 */
       if(ulCount != 0) {
          fprintf(stderr, "Not initialized, but count is not 0\n");
          return FALSE;
       }
 
+      /* Non-initialized tree must have NULL root */
       if (oNRoot != NULL) {
          fprintf(stderr, "Not initialized, but root is not NULL\n");
          return FALSE;
@@ -160,25 +163,26 @@ boolean CheckerFT_isValid(boolean bIsInitialized, Node_T oNRoot,
    }
 
    /* Empty Tree Check */
-   if (ulCount == 0) {
-      if (oNRoot != NULL) {
-         fprintf(stderr, "Count is zero, but root is not NULL\n");
-         return FALSE;
-      }
+   if (ulCount == 0 && oNRoot != NULL) {
+      fprintf(stderr, "Count is zero, but root is not NULL\n");
+      return FALSE;
    }
 
    /* Non-Empty Tree Check */
    if (ulCount != 0) {
+      /* root of non-empty tree cannot be NULL */
       if (oNRoot == NULL) {
          fprintf(stderr, "Count is non-zero, but root is NULL\n");
          return FALSE;
       }
 
+      /* root of non-empty tree must be NULL */
       if (Node_getParent(oNRoot) != NULL) {
          fprintf(stderr, "Parent of root node not NULL\n");
          return FALSE;
       }
 
+      /* root of non-empty tree cannot be a file */
       if (Node_isFile(oNRoot)) {
          fprintf(stderr, "The root node is a file\n");
          return FALSE;

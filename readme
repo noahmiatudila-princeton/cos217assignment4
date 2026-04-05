@@ -168,11 +168,16 @@ however it is never used. When dtGood.c builds the string representation
 of the tree in DT_toString, it ignores Node_toString and instead uses
 its own custom mapping functions whi rely on Node_getPath and
 Path_getPathname.
-3. In nodeDTGood.c, Node_hasChild requiires a Path_T only to remove its
+3. In nodeDTGood.c, Node_hasChild requires a Path_T only to remove its 
 string and cast away the const qualifier, which goes against
 abstraction principles.
-4. dtGood.c follows non-standard parameter ordering in helper functions
-such as DT_preOrderTraversal which does not place the destination
+4. dtGood.c follows non-standard parameter ordering in helper functions 
+such as DT_preOrderTraversal which does not place the destination 
 parameter first.
-
+5. dtGood.c and nodeDTGood.c uses varables before they may be defined 
+or initialized (e.g. using variable ulChildID in DT_traversePath or 
+ulIndex in Node_new and Node_free).
+6. In Path.h, function Path_getComponent is declared but never used
+outside the module. Therefore, it is likely Path_getComponent is a
+helper method and should use the static qualifier.
 ------------------------------------------------------------------------

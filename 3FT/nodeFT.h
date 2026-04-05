@@ -16,9 +16,10 @@ typedef struct node *Node_T;
 
 /*
   Creates a new node in the File Tree, with path oPPath and
-  parent oNParent. Returns an int SUCCESS status and sets *poNResult
-  to be the new node if successful. Otherwise, sets *poNResult to NULL
-  and returns status:
+  parent oNParent. If the node is a file, the function will set bIsFile
+  to TRUE and set pvContents and ulLength to their passed values.
+  Returns an int SUCCESS status and sets *poNResult to be the new node 
+  if successful. Otherwise, sets *poNResult to NULL and returns status:
   * MEMORY_ERROR if memory could not be allocated to complete request
   * CONFLICTING_PATH if oNParent's path is not an ancestor of oPPath
   * NO_SUCH_PATH if oPPath is of depth 0

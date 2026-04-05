@@ -297,6 +297,8 @@ static int FT_insertNode(const char *pcPath, boolean bIsFile,
 /*--------------------------------------------------------------------*/
 
 int FT_insertDir(const char *pcPath) {
+    assert(pcPath != NULL);
+
     return FT_insertNode(pcPath, FALSE, NULL, 0);
 }
 
@@ -335,6 +337,10 @@ int FT_rmDir(const char *pcPath) {
 
 int FT_insertFile(const char *pcPath, void *pvContents,
                   size_t ulLength) {
+    
+    assert(pcPath != NULL);
+    assert(pvContents != NULL);
+
     return FT_insertNode(pcPath, TRUE, pvContents, ulLength);
 }
 

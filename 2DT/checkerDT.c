@@ -72,6 +72,8 @@ static boolean CheckerDT_treeCheck(Node_T oNNode,
    size_t *pulNodeCount) {
    size_t ulIndex;
 
+   assert (pulNodeCount != NULL);
+
    if(oNNode!= NULL) {
       /* Count this node */
       (*pulNodeCount)++;
