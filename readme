@@ -166,7 +166,7 @@ practices.
 2. In nodeDTGood.c, the function Node_toString is fully implemented,
 however it is never used. When dtGood.c builds the string representation
 of the tree in DT_toString, it ignores Node_toString and instead uses
-its own custom mapping functions whi rely on Node_getPath and
+its own custom mapping functions which rely on Node_getPath and
 Path_getPathname.
 3. In nodeDTGood.c, Node_hasChild requires a Path_T only to remove its 
 string and cast away the const qualifier, which goes against

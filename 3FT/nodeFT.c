@@ -262,13 +262,6 @@ Node_T Node_getParent(Node_T oNNode) {
    return oNNode->oNParent;
 }
 
-int Node_compare(Node_T oNFirst, Node_T oNSecond) {
-   assert(oNFirst != NULL);
-   assert(oNSecond != NULL);
-
-   return Path_comparePath(oNFirst->oPPath, oNSecond->oPPath);
-}
-
 boolean Node_isFile(Node_T oNNode) {
     return oNNode->bIsFile;
 }
